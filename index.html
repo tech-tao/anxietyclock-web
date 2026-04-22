@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Anxiety Clock</title>
+  <meta name="description" content="Visualize your fixed financial obligations in real time — per second, minute, hour, day, month, and year." />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg0: #060606; --bg1: #0e0e0e; --bg2: #181818;
+      --border: #1a1a1a; --border-red: #2a0000;
+      --red: #ff3333; --red-dim: #cc2222; --red-dark: #991111;
+      --text: #f0f0f0; --text-sec: #aaaaaa; --text-ter: #555555;
+      --mono: 'Courier New', Courier, monospace;
+    }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg0); color: var(--text); font-family: var(--mono); line-height: 1.6; }
+    a { color: var(--red); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* ── NAV ── */
+    nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 18px 40px; border-bottom: 1px solid var(--border);
+      position: sticky; top: 0; background: rgba(6,6,6,0.94);
+      backdrop-filter: blur(10px); z-index: 100; gap: 16px; flex-wrap: wrap;
+    }
+    .nav-logo { display: flex; align-items: center; gap: 10px; font-size: 15px; letter-spacing: 3px; color: var(--text); font-weight: 300; white-space: nowrap; }
+    .nav-logo span { color: var(--red); }
+    .nav-right { display: flex; align-items: center; gap: 24px; flex-wrap: wrap; }
+    .nav-links { display: flex; gap: 24px; font-size: 11px; letter-spacing: 2px; }
+    .nav-links a { color: var(--text-ter); }
+    .nav-links a:hover { color: var(--red); }
+
+    /* Language switcher */
+    .lang-switcher { display: flex; gap: 6px; flex-wrap: wrap; }
+    .lang-btn {
+      font-family: var(--mono); font-size: 10px; letter-spacing: 1px;
+      padding: 4px 10px; border-radius: 4px; cursor: pointer;
+      border: 1px solid var(--border); background: transparent; color: var(--text-ter);
+      transition: all 0.15s;
+    }
+    .lang-btn:hover { border-color: #333; color: var(--text-sec); }
+    .lang-btn.active { border-color: var(--red-dim); color: var(--red); background: #1a0000; }
+
+    /* ── HERO ── */
+    .hero {
+      display: flex; flex-direction: column; align-items: center;
+      text-align: center; padding: 90px 24px 60px; max-width: 760px; margin: 0 auto;
+    }
+    .hero-tag {
+      font-size: 10px; letter-spacing: 4px; color: var(--red-dim);
+      border: 1px solid var(--border-red); padding: 6px 18px;
+      border-radius: 20px; margin-bottom: 32px; text-transform: uppercase;
+    }
+    .hero h1 {
+      font-size: clamp(32px, 8vw, 60px); font-weight: 200;
+      letter-spacing: 3px; color: var(--text); margin-bottom: 24px; line-height: 1.2;
+    }
+    .hero h1 em { color: var(--red); font-style: normal; }
+    .hero p { font-size: 13px; color: var(--text-sec); max-width: 480px; margin-bottom: 44px; line-height: 1.9; }
+    .btn-group { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; }
+    .btn {
+      padding: 13px 30px; border-radius: 8px; font-family: var(--mono);
+      font-size: 12px; letter-spacing: 2px; cursor: pointer; border: 1px solid; transition: all 0.2s;
+    }
+    .btn-primary { background: #2d0000; color: var(--red); border-color: var(--red-dim); }
+    .btn-primary:hover { background: #3d0000; text-decoration: none; }
+    .btn-secondary { background: transparent; color: var(--text-ter); border-color: #2a2a2a; }
+    .btn-secondary:hover { border-color: #444; color: var(--text-sec); text-decoration: none; }
+
+    /* ── TICKER DEMO ── */
+    .ticker-wrap { display: flex; justify-content: center; padding: 0 24px 80px; }
+    .ticker-demo {
+      width: 100%; max-width: 460px; border: 1px solid var(--border-red);
+      border-radius: 16px; padding: 32px 24px; background: #040000;
+      text-align: center; position: relative; overflow: hidden;
+    }
+    .ticker-scanline {
+      position: absolute; left: 0; right: 0; height: 50px;
+      background: rgba(255,255,255,0.012); animation: scan 2.5s linear infinite;
+    }
+    @keyframes scan { from { top: -50px; } to { top: 100%; } }
+    .grid-lines { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: space-between; pointer-events: none; }
+    .grid-line { height: 1px; background: #150000; }
+    .ticker-label { font-size: 10px; letter-spacing: 3px; color: var(--red-dark); margin-bottom: 14px; position: relative; }
+    .ticker-number {
+      font-size: clamp(44px, 12vw, 72px); font-weight: 200; color: var(--red);
+      letter-spacing: -2px; font-variant-numeric: tabular-nums; position: relative; line-height: 1;
+    }
+    .ticker-currency { font-size: 0.42em; color: var(--red-dim); vertical-align: middle; }
+    .ticker-dec { font-size: 0.48em; color: var(--red-dark); }
+    .stress-bar { display: flex; gap: 5px; justify-content: center; margin-top: 18px; position: relative; }
+    .stress-seg { width: 28px; height: 3px; border-radius: 2px; background: var(--border-red); }
+    .stress-seg.active { background: var(--red); }
+    .ticker-note { font-size: 11px; color: var(--text-ter); margin-top: 14px; position: relative; }
+
+    /* ── SCREENSHOTS ── */
+    .screenshots-section { padding: 80px 24px; background: var(--bg1); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .section-header { text-align: center; margin-bottom: 52px; }
+    .section-tag { font-size: 10px; letter-spacing: 4px; color: var(--text-ter); text-transform: uppercase; margin-bottom: 12px; }
+    .section-title { font-size: clamp(20px, 4vw, 28px); font-weight: 200; letter-spacing: 2px; color: var(--text); }
+
+    .phones {
+      display: flex; gap: 20px; justify-content: center; align-items: flex-end;
+      flex-wrap: nowrap; max-width: 1300px; margin: 0 auto; overflow-x: auto;
+    }
+    .phone-wrap { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+    .phone-label { font-size: 10px; letter-spacing: 2px; color: var(--text-ter); text-transform: uppercase; }
+    .phone {
+      border: 2px solid #2a2a2a;
+      background: #0a0a0a; overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.6), 0 0 0 1px #111;
+      position: relative; flex-shrink: 0;
+      cursor: zoom-in; transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .phone:hover { transform: translateY(-4px); box-shadow: 0 28px 70px rgba(0,0,0,0.7), 0 0 0 1px #333; }
+    /* portrait default — 1206:2622 ≈ 1:2.175 */
+    .phone.main    { width: 210px; height: 456px; border-radius: 36px; }
+    .phone.side    { width: 210px; height: 456px; border-radius: 36px; opacity: 0.85; }
+    /* landscape — 2622:1206 ≈ 2.175:1 */
+    .phone.landscape { width: 380px; height: 175px; border-radius: 24px; opacity: 0.85; }
+    /* notch for portrait only */
+    .phone:not(.landscape)::before {
+      content: ''; position: absolute; top: 10px; left: 50%; transform: translateX(-50%);
+      width: 60px; height: 5px; background: #1a1a1a; border-radius: 3px; z-index: 2;
+    }
+    .phone img { width: 100%; height: 100%; object-fit: cover; display: block; image-rendering: -webkit-optimize-contrast; }
+    .phone-placeholder {
+      width: 100%; height: 100%; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 10px;
+      background: linear-gradient(160deg, #0a0000 0%, #060606 100%);
+      color: var(--text-ter); font-size: 11px; letter-spacing: 1px; text-align: center; padding: 20px;
+    }
+    .phone-placeholder .ph-icon { font-size: 28px; opacity: 0.4; }
+    .phone-placeholder .ph-text { opacity: 0.4; line-height: 1.6; }
+
+    /* ── LIGHTBOX ── */
+    .lightbox {
+      display: none; position: fixed; inset: 0; z-index: 1000;
+      background: rgba(0,0,0,0.92); align-items: center; justify-content: center;
+      cursor: zoom-out;
+    }
+    .lightbox.open { display: flex; }
+    .lightbox img {
+      max-width: 92vw; max-height: 92vh;
+      border-radius: 16px; box-shadow: 0 0 80px rgba(0,0,0,0.8);
+      object-fit: contain;
+    }
+    .lightbox-close {
+      position: absolute; top: 20px; right: 24px;
+      font-size: 28px; color: #666; cursor: pointer; line-height: 1;
+      font-family: var(--mono);
+    }
+    .lightbox-close:hover { color: #fff; }
+
+    /* ── FEATURES ── */
+    .features-section { padding: 80px 24px; max-width: 980px; margin: 0 auto; }
+    .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin-top: 48px; }
+    .feature-card {
+      background: var(--bg1); border: 1px solid var(--border);
+      border-radius: 16px; padding: 26px;
+      transition: border-color 0.2s;
+    }
+    .feature-card:hover { border-color: #2a2a2a; }
+    .feature-icon { font-size: 26px; margin-bottom: 14px; }
+    .feature-title { font-size: 13px; color: var(--text); letter-spacing: 1px; margin-bottom: 8px; }
+    .feature-desc { font-size: 12px; color: var(--text-sec); line-height: 1.8; }
+
+    /* ── DOWNLOAD ── */
+    .download-section {
+      text-align: center; padding: 80px 24px;
+      border-top: 1px solid var(--border);
+    }
+    .download-section h2 { font-size: clamp(22px, 4vw, 30px); font-weight: 200; letter-spacing: 3px; margin-bottom: 14px; }
+    .download-section p { font-size: 13px; color: var(--text-sec); margin-bottom: 40px; }
+    .store-badges { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+    .store-btn {
+      display: flex; align-items: center; gap: 12px;
+      padding: 14px 28px; border: 1px solid #2a2a2a;
+      border-radius: 12px; background: var(--bg1); color: var(--text);
+      font-family: var(--mono); font-size: 13px; letter-spacing: 1px; transition: border-color 0.2s;
+    }
+    .store-btn:hover { border-color: #444; text-decoration: none; }
+    .store-btn .si { font-size: 22px; }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border); padding: 28px 40px;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 12px;
+    }
+    .footer-copy { font-size: 11px; color: var(--text-ter); }
+    .footer-links { display: flex; gap: 20px; font-size: 11px; }
+    .footer-links a { color: var(--text-ter); }
+    .footer-links a:hover { color: var(--text-sec); }
+
+    /* ── DIVIDER ── */
+    .divider { border: none; border-top: 1px solid var(--border); margin: 0; }
+
+    @media (max-width: 640px) {
+      nav { padding: 14px 20px; }
+      .phone.side { display: none; }
+      footer { padding: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-logo">
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <!-- Dashed clock ring -->
+        <circle cx="14" cy="14" r="11" stroke="#2a2a2a" stroke-width="1.5" fill="none" stroke-dasharray="2.5 2.2"/>
+        <!-- Red accent arc: 10:30 → 12:10 (the danger zone both hands point toward) -->
+        <!-- 10:30 = -45° from vertical: (6.22, 6.22) -->
+        <!-- 12:10 = +10° from vertical: (15.91, 3.17) -->
+        <path d="M 6.22 6.22 A 11 11 0 0 1 15.91 3.17" stroke="#cc1111" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <!-- Hour hand ~10:00 (−60° from vertical), length 6 -->
+        <line x1="14" y1="14" x2="8.8" y2="11" stroke="#881111" stroke-width="2.2" stroke-linecap="round"/>
+        <!-- Minute hand ~11:50 (−10° from vertical), length 9.5 -->
+        <line x1="14" y1="14" x2="12.35" y2="4.65" stroke="#ff3333" stroke-width="1.5" stroke-linecap="round"/>
+        <!-- Pivot dot -->
+        <circle cx="14" cy="14" r="1.8" fill="#cc1111"/>
+      </svg>
+      ANXIETY <span>CLOCK</span>
+    </div>
+    <div class="nav-right">
+      <div class="nav-links">
+        <a href="#screenshots" data-i18n="nav_screenshots">Screenshots</a>
+        <a href="#features" data-i18n="nav_features">Features</a>
+        <a href="#download" data-i18n="nav_download">Download</a>
+        <a href="privacy.html" data-i18n="nav_privacy">Privacy</a>
+      </div>
+      <div class="lang-switcher" id="langSwitcher"></div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-tag" data-i18n="hero_tag">Financial Pressure · Visualized</div>
+    <h1 data-i18n="hero_title">Every second,<br/>you owe <em>money</em>.</h1>
+    <p data-i18n="hero_desc">Anxiety Clock turns your fixed expenses — mortgage, rent, loans, insurance — into a real-time ticker. Watch your financial obligations flow by the second.</p>
+    <div class="btn-group">
+      <a href="#download" class="btn btn-primary" data-i18n="hero_cta_primary">Download Free</a>
+      <a href="#features" class="btn btn-secondary" data-i18n="hero_cta_secondary">Learn More</a>
+    </div>
+    <div class="store-badges" style="margin-top:24px;">
+      <a href="#" class="store-btn">
+        <span class="si">🍎</span>
+        <span data-i18n="dl_ios">App Store</span>
+      </a>
+      <a href="#" class="store-btn">
+        <span class="si">🤖</span>
+        <span data-i18n="dl_android">Google Play</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- TICKER DEMO -->
+  <div class="ticker-wrap">
+    <div class="ticker-demo">
+      <div class="grid-lines">
+        <div class="grid-line"></div><div class="grid-line"></div>
+        <div class="grid-line"></div><div class="grid-line"></div>
+        <div class="grid-line"></div>
+      </div>
+      <div class="ticker-scanline"></div>
+      <div class="ticker-label" data-i18n="ticker_label">PER SECOND · FINANCIAL PRESSURE</div>
+      <div class="ticker-number">
+        <span class="ticker-currency">¥</span><span id="tickerInt">0</span><span class="ticker-dec" id="tickerDec">.00</span>
+      </div>
+      <div class="stress-bar">
+        <div class="stress-seg"></div><div class="stress-seg"></div>
+        <div class="stress-seg active"></div><div class="stress-seg"></div>
+        <div class="stress-seg"></div><div class="stress-seg"></div>
+      </div>
+      <div class="ticker-note" data-i18n="ticker_note">Based on ¥12,000 / month in fixed expenses</div>
+    </div>
+  </div>
+
+  <!-- SCREENSHOTS -->
+  <div class="screenshots-section" id="screenshots">
+    <div class="section-header">
+      <div class="section-tag" data-i18n="screenshots_tag">App Screenshots</div>
+      <div class="section-title" data-i18n="screenshots_title">See it in action</div>
+    </div>
+    <div class="phones">
+      <!--
+        TO ADD SCREENSHOTS:
+        1. Put your screenshot images in the website/ folder
+        2. Replace <div class="phone-placeholder">...</div> with <img src="your-screenshot.png" alt="..." />
+        e.g. <img src="screen1.png" alt="Home screen" />
+      -->
+      <div class="phone landscape">
+        <img src="screenshot4.png" alt="Landscape Clock" />
+      </div>
+      <div class="phone main">
+        <img src="screenshot1.png" alt="Landscape Clock" />
+      </div>
+      <div class="phone main">
+        <img src="screenshot2.png" alt="Home Screen" />
+      </div>
+      <div class="phone landscape">
+        <img src="screenshot3.png" alt="Add Expense" />
+      </div>
+    </div>
+  </div>
+
+  <!-- FEATURES -->
+  <div class="features-section" id="features">
+    <div class="section-header">
+      <div class="section-tag" data-i18n="features_tag">Features</div>
+      <div class="section-title" data-i18n="features_title">What it does</div>
+    </div>
+    <div class="features">
+      <div class="feature-card">
+        <div class="feature-icon">⏱</div>
+        <div class="feature-title" data-i18n="f1_title">Real-Time Pressure Ticker</div>
+        <div class="feature-desc" data-i18n="f1_desc">Watch your expenses broken down per year, month, day, hour, minute, or second — live animated counter.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🏠</div>
+        <div class="feature-title" data-i18n="f2_title">Multiple Expense Types</div>
+        <div class="feature-desc" data-i18n="f2_desc">Supports mortgage, car loans, rent, taxes, insurance, tuition, and custom entries. Built-in loan calculator.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🕐</div>
+        <div class="feature-title" data-i18n="f3_title">Landscape Clock Mode</div>
+        <div class="feature-desc" data-i18n="f3_desc">Rotate to landscape for a full-screen pressure display with analog or digital clock.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🌍</div>
+        <div class="feature-title" data-i18n="f4_title">7 Languages · 9 Currencies</div>
+        <div class="feature-desc" data-i18n="f4_desc">Available in Chinese, English, French, Japanese, Korean, German, and Spanish with multi-currency support.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🎨</div>
+        <div class="feature-title" data-i18n="f5_title">Fully Customizable</div>
+        <div class="feature-desc" data-i18n="f5_desc">Choose from 6 accent colors and analog or digital clock style. All data stays on your device.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">👑</div>
+        <div class="feature-title" data-i18n="f6_title">One-Time Premium</div>
+        <div class="feature-desc" data-i18n="f6_desc">Remove all ads with a single one-time purchase. No subscription, no recurring fees — ever.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DOWNLOAD -->
+  <div class="download-section" id="download">
+    <h2 data-i18n="dl_title">GET THE APP</h2>
+    <p data-i18n="dl_desc">Free to download. Available on iOS and Android.</p>
+    <div class="store-badges">
+      <a href="#" class="store-btn">
+        <span class="si">🍎</span>
+        <span data-i18n="dl_ios">App Store</span>
+      </a>
+      <a href="#" class="store-btn">
+        <span class="si">🤖</span>
+        <span data-i18n="dl_android">Google Play</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- LIGHTBOX -->
+  <div class="lightbox" id="lightbox">
+    <span class="lightbox-close" id="lightboxClose">✕</span>
+    <img id="lightboxImg" src="" alt="" />
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-copy" data-i18n="footer_copy">© 2025 Tech-Tao. All rights reserved.</div>
+    <div class="footer-links">
+      <a href="mailto:support@tech-tao.com" data-i18n="footer_contact">Contact</a>
+      <a href="privacy.html" data-i18n="nav_privacy">Privacy Policy</a>
+    </div>
+  </footer>
+
+  <script>
+  // ── TRANSLATIONS ──────────────────────────────────────────────────────────────
+  const LANGS = {
+    en: { label: 'EN', translations: {
+      nav_screenshots: 'Screenshots', nav_features: 'Features',
+      nav_download: 'Download', nav_privacy: 'Privacy',
+      hero_tag: 'Financial Pressure · Visualized',
+      hero_title: 'Every second,<br/>you owe <em>money</em>.',
+      hero_desc: 'Anxiety Clock turns your fixed expenses — mortgage, rent, loans, insurance — into a real-time ticker. Watch your financial obligations flow by the second.',
+      hero_cta_primary: 'Download Free', hero_cta_secondary: 'Learn More',
+      ticker_label: 'PER SECOND · FINANCIAL PRESSURE',
+      ticker_note: 'Based on ¥12,000 / month in fixed expenses',
+      screenshots_tag: 'App Screenshots', screenshots_title: 'See it in action',
+      screenshot_placeholder: 'Screenshot<br/>coming soon',
+      features_tag: 'Features', features_title: 'What it does',
+      f1_title: 'Real-Time Pressure Ticker',
+      f1_desc: 'Watch your expenses broken down per year, month, day, hour, minute, or second — live animated counter.',
+      f2_title: 'Multiple Expense Types',
+      f2_desc: 'Supports mortgage, car loans, rent, taxes, insurance, tuition, and custom entries. Built-in loan calculator.',
+      f3_title: 'Landscape Clock Mode',
+      f3_desc: 'Rotate to landscape for a full-screen pressure display with analog or digital clock.',
+      f4_title: '7 Languages · 9 Currencies',
+      f4_desc: 'Available in Chinese, English, French, Japanese, Korean, German, and Spanish with multi-currency support.',
+      f5_title: 'Fully Customizable',
+      f5_desc: 'Choose from 6 accent colors and analog or digital clock style. All data stays on your device.',
+      f6_title: 'One-Time Premium',
+      f6_desc: 'Remove all ads with a single one-time purchase. No subscription, no recurring fees — ever.',
+      dl_title: 'GET THE APP', dl_desc: 'Free to download. Available on iOS and Android.',
+      dl_ios: 'App Store', dl_android: 'Google Play',
+      footer_copy: '© 2025 Tech-Tao. All rights reserved.', footer_contact: 'Contact',
+    }},
+    zh: { label: '中文', translations: {
+      nav_screenshots: '截图', nav_features: '功能',
+      nav_download: '下载', nav_privacy: '隐私政策',
+      hero_tag: '财务压力 · 实时可视化',
+      hero_title: '每一秒，<br/>你都在<em>负债</em>。',
+      hero_desc: '焦虑时钟将你的固定支出——房贷、房租、贷款、保险——转化为实时跳动的数字。感受每一秒钟的财务压力。',
+      hero_cta_primary: '免费下载', hero_cta_secondary: '了解更多',
+      ticker_label: '每秒 · 财务压力',
+      ticker_note: '基于每月 ¥12,000 固定支出',
+      screenshots_tag: '应用截图', screenshots_title: '实际效果',
+      screenshot_placeholder: '截图<br/>即将上线',
+      features_tag: '功能特性', features_title: '这款应用能做什么',
+      f1_title: '实时压力计', f1_desc: '按年、月、天、时、分、秒查看你的支出，实时动态显示。',
+      f2_title: '多种支出类型', f2_desc: '支持房贷、车贷、房租、税费、保险、学费及自定义项目，内置贷款计算器。',
+      f3_title: '横屏时钟模式', f3_desc: '横屏后全屏展示压力计，搭配指针或数字时钟，适合桌面展示。',
+      f4_title: '7种语言 · 9种货币', f4_desc: '支持中文、英文、法语、日语、韩语、德语、西班牙语，以及多种货币。',
+      f5_title: '高度可定制', f5_desc: '6种主题色、指针或数字时钟样式自由选择，所有数据仅保存在本地。',
+      f6_title: '一次购买，永久去广告', f6_desc: '一次性购买即可永久移除所有广告，无订阅，无续费。',
+      dl_title: '立即下载', dl_desc: '免费下载，支持 iOS 和 Android。',
+      dl_ios: 'App Store', dl_android: 'Google Play',
+      footer_copy: '© 2025 Tech-Tao 保留所有权利。', footer_contact: '联系我们',
+    }},
+    fr: { label: 'FR', translations: {
+      nav_screenshots: 'Captures', nav_features: 'Fonctions',
+      nav_download: 'Télécharger', nav_privacy: 'Confidentialité',
+      hero_tag: 'Pression Financière · Visualisée',
+      hero_title: 'Chaque seconde,<br/>vous devez de l\'<em>argent</em>.',
+      hero_desc: 'Horloge d\'Anxiété transforme vos dépenses fixes — hypothèque, loyer, prêts, assurance — en un compteur en temps réel.',
+      hero_cta_primary: 'Télécharger', hero_cta_secondary: 'En savoir plus',
+      ticker_label: 'PAR SECONDE · PRESSION FINANCIÈRE',
+      ticker_note: 'Basé sur ¥12 000 / mois en dépenses fixes',
+      screenshots_tag: 'Captures d\'écran', screenshots_title: 'En action',
+      screenshot_placeholder: 'Capture<br/>bientôt disponible',
+      features_tag: 'Fonctionnalités', features_title: 'Ce qu\'elle fait',
+      f1_title: 'Compteur en temps réel', f1_desc: 'Visualisez vos dépenses par an, mois, jour, heure, minute ou seconde.',
+      f2_title: 'Types de dépenses multiples', f2_desc: 'Hypothèque, prêt auto, loyer, impôts, assurance, frais scolaires et plus.',
+      f3_title: 'Mode paysage horloge', f3_desc: 'Retournez en mode paysage pour un affichage plein écran avec horloge.',
+      f4_title: '7 langues · 9 devises', f4_desc: 'Disponible en chinois, anglais, français, japonais, coréen, allemand et espagnol.',
+      f5_title: 'Entièrement personnalisable', f5_desc: '6 couleurs d\'accent, style d\'horloge analogique ou numérique.',
+      f6_title: 'Premium unique', f6_desc: 'Supprimez toutes les publicités avec un seul achat. Sans abonnement.',
+      dl_title: 'TÉLÉCHARGER', dl_desc: 'Gratuit. Disponible sur iOS et Android.',
+      dl_ios: 'App Store', dl_android: 'Google Play',
+      footer_copy: '© 2025 Tech-Tao. Tous droits réservés.', footer_contact: 'Contact',
+    }},
+    ja: { label: '日本語', translations: {
+      nav_screenshots: 'スクリーンショット', nav_features: '機能',
+      nav_download: 'ダウンロード', nav_privacy: 'プライバシー',
+      hero_tag: '財務プレッシャー · リアルタイム可視化',
+      hero_title: '毎秒、あなたは<br/><em>借金</em>している。',
+      hero_desc: '不安時計は住宅ローン、家賃、保険などの固定支出をリアルタイムのカウンターに変換します。毎秒流れていくお金を実感してください。',
+      hero_cta_primary: '無料ダウンロード', hero_cta_secondary: '詳しく見る',
+      ticker_label: '毎秒 · 財務プレッシャー',
+      ticker_note: '月¥12,000の固定支出に基づく',
+      screenshots_tag: 'スクリーンショット', screenshots_title: '実際の画面',
+      screenshot_placeholder: 'スクリーンショット<br/>近日公開',
+      features_tag: '機能', features_title: 'できること',
+      f1_title: 'リアルタイムカウンター', f1_desc: '年・月・日・時間・分・秒単位で支出をリアルタイム表示。',
+      f2_title: '多様な支出タイプ', f2_desc: '住宅ローン、カーローン、家賃、税金、保険、学費など対応。',
+      f3_title: '横画面クロックモード', f3_desc: '横向きで全画面表示。アナログまたはデジタル時計付き。',
+      f4_title: '7言語 · 9通貨', f4_desc: '中国語、英語、フランス語、日本語、韓国語、ドイツ語、スペイン語対応。',
+      f5_title: 'カスタマイズ自由', f5_desc: '6色のアクセントカラー、時計スタイルを選択。データはすべてローカル保存。',
+      f6_title: '買い切りプレミアム', f6_desc: '一度の購入で広告を永久削除。サブスクなし。',
+      dl_title: 'ダウンロード', dl_desc: '無料。iOS・Android対応。',
+      dl_ios: 'App Store', dl_android: 'Google Play',
+      footer_copy: '© 2025 Tech-Tao. All rights reserved.', footer_contact: 'お問い合わせ',
+    }},
+    ko: { label: '한국어', translations: {
+      nav_screenshots: '스크린샷', nav_features: '기능',
+      nav_download: '다운로드', nav_privacy: '개인정보',
+      hero_tag: '재정 압박 · 실시간 시각화',
+      hero_title: '매 초마다,<br/>당신은 <em>빚</em>지고 있다.',
+      hero_desc: '불안 시계는 주택담보대출, 임대료, 보험 등 고정 지출을 실시간 카운터로 변환합니다. 매 초 흘러가는 돈을 느껴보세요.',
+      hero_cta_primary: '무료 다운로드', hero_cta_secondary: '자세히 보기',
+      ticker_label: '초당 · 재정 압박',
+      ticker_note: '월 ¥12,000 고정 지출 기준',
+      screenshots_tag: '앱 스크린샷', screenshots_title: '실제 화면',
+      screenshot_placeholder: '스크린샷<br/>준비 중',
+      features_tag: '기능', features_title: '무엇을 할 수 있나요',
+      f1_title: '실시간 압박 카운터', f1_desc: '연, 월, 일, 시간, 분, 초 단위로 지출을 실시간 표시.',
+      f2_title: '다양한 지출 유형', f2_desc: '주택담보대출, 자동차 대출, 임대료, 세금, 보험, 학비 등 지원.',
+      f3_title: '가로 모드 시계', f3_desc: '가로 화면으로 전체 화면 표시. 아날로그 또는 디지털 시계.',
+      f4_title: '7개 언어 · 9개 통화', f4_desc: '중국어, 영어, 프랑스어, 일본어, 한국어, 독일어, 스페인어 지원.',
+      f5_title: '완전한 커스터마이징', f5_desc: '6가지 색상, 시계 스타일 선택. 데이터는 기기에만 저장.',
+      f6_title: '일회성 프리미엄', f6_desc: '한 번 구매로 광고 영구 제거. 구독 없음.',
+      dl_title: '앱 다운로드', dl_desc: '무료. iOS 및 Android 지원.',
+      dl_ios: 'App Store', dl_android: 'Google Play',
+      footer_copy: '© 2025 Tech-Tao. All rights reserved.', footer_contact: '문의하기',
+    }},
+    de: { label: 'DE', translations: {
+      nav_screenshots: 'Screenshots', nav_features: 'Funktionen',
+      nav_download: 'Download', nav_privacy: 'Datenschutz',
+      hero_tag: 'Finanzdruck · Visualisiert',
+      hero_title: 'Jede Sekunde<br/>schuldest du <em>Geld</em>.',
+      hero_desc: 'Angst-Uhr wandelt Ihre Fixkosten — Hypothek, Miete, Kredite, Versicherung — in einen Echtzeit-Ticker um.',
+      hero_cta_primary: 'Kostenlos laden', hero_cta_secondary: 'Mehr erfahren',
+      ticker_label: 'PRO SEKUNDE · FINANZDRUCK',
+      ticker_note: 'Basierend auf ¥12.000 / Monat Fixkosten',
+      screenshots_tag: 'Screenshots', screenshots_title: 'In Aktion',
+      screenshot_placeholder: 'Screenshot<br/>demnächst',
+      features_tag: 'Funktionen', features_title: 'Was es kann',
+      f1_title: 'Echtzeit-Ticker', f1_desc: 'Fixkosten pro Jahr, Monat, Tag, Stunde, Minute oder Sekunde — live animiert.',
+      f2_title: 'Mehrere Ausgabentypen', f2_desc: 'Hypothek, Autokredit, Miete, Steuern, Versicherung, Studiengebühren und mehr.',
+      f3_title: 'Querformat-Uhrmodus', f3_desc: 'Im Querformat Vollbild-Anzeige mit Analog- oder Digitaluhr.',
+      f4_title: '7 Sprachen · 9 Währungen', f4_desc: 'Verfügbar auf Chinesisch, Englisch, Französisch, Japanisch, Koreanisch, Deutsch und Spanisch.',
+      f5_title: 'Voll anpassbar', f5_desc: '6 Akzentfarben, Analog- oder Digitaluhr. Alle Daten bleiben lokal.',
+      f6_title: 'Einmaliges Premium', f6_desc: 'Alle Werbung mit einem einmaligen Kauf entfernen. Kein Abo.',
+      dl_title: 'APP LADEN', dl_desc: 'Kostenlos. Verfügbar für iOS und Android.',
+      dl_ios: 'App Store', dl_android: 'Google Play',
+      footer_copy: '© 2025 Tech-Tao. Alle Rechte vorbehalten.', footer_contact: 'Kontakt',
+    }},
+    es: { label: 'ES', translations: {
+      nav_screenshots: 'Capturas', nav_features: 'Funciones',
+      nav_download: 'Descargar', nav_privacy: 'Privacidad',
+      hero_tag: 'Presión Financiera · Visualizada',
+      hero_title: 'Cada segundo,<br/>debes <em>dinero</em>.',
+      hero_desc: 'Reloj de Ansiedad convierte tus gastos fijos — hipoteca, alquiler, préstamos, seguros — en un contador en tiempo real.',
+      hero_cta_primary: 'Descargar gratis', hero_cta_secondary: 'Saber más',
+      ticker_label: 'POR SEGUNDO · PRESIÓN FINANCIERA',
+      ticker_note: 'Basado en ¥12,000 / mes en gastos fijos',
+      screenshots_tag: 'Capturas de pantalla', screenshots_title: 'En acción',
+      screenshot_placeholder: 'Captura<br/>próximamente',
+      features_tag: 'Características', features_title: 'Qué hace',
+      f1_title: 'Contador en tiempo real', f1_desc: 'Gastos por año, mes, día, hora, minuto o segundo — animado en vivo.',
+      f2_title: 'Múltiples tipos de gasto', f2_desc: 'Hipoteca, préstamo de auto, alquiler, impuestos, seguro, matrícula y más.',
+      f3_title: 'Modo horizontal reloj', f3_desc: 'Gira a horizontal para pantalla completa con reloj analógico o digital.',
+      f4_title: '7 idiomas · 9 monedas', f4_desc: 'Chino, inglés, francés, japonés, coreano, alemán y español.',
+      f5_title: 'Totalmente personalizable', f5_desc: '6 colores de acento, estilo de reloj analógico o digital. Datos locales.',
+      f6_title: 'Premium de pago único', f6_desc: 'Elimina todos los anuncios con una sola compra. Sin suscripción.',
+      dl_title: 'DESCARGAR APP', dl_desc: 'Gratis. Disponible en iOS y Android.',
+      dl_ios: 'App Store', dl_android: 'Google Play',
+      footer_copy: '© 2025 Tech-Tao. Todos los derechos reservados.', footer_contact: 'Contacto',
+    }},
+  };
+
+  // ── LANGUAGE SWITCHER ────────────────────────────────────────────────────────
+  let currentLang = localStorage.getItem('lang') || 'en';
+
+  function applyLang(code) {
+    currentLang = code;
+    localStorage.setItem('lang', code);
+    const t = LANGS[code].translations;
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.getAttribute('data-i18n');
+      if (t[key] !== undefined) el.innerHTML = t[key];
+    });
+    document.documentElement.lang = code;
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.lang === code);
+    });
+  }
+
+  // Build switcher buttons
+  const switcher = document.getElementById('langSwitcher');
+  Object.entries(LANGS).forEach(([code, { label }]) => {
+    const btn = document.createElement('button');
+    btn.className = 'lang-btn';
+    btn.dataset.lang = code;
+    btn.textContent = label;
+    btn.onclick = () => applyLang(code);
+    switcher.appendChild(btn);
+  });
+
+  applyLang(currentLang);
+
+  // ── TICKER ANIMATION ─────────────────────────────────────────────────────────
+  const PER_SEC = 12000 / (30.44 * 24 * 3600);
+  let val = 0, noise = 0;
+  function fmt(n) {
+    const [i, d] = n.toFixed(2).split('.');
+    return { int: parseInt(i).toLocaleString(), dec: '.' + d };
+  }
+  function tick() {
+    val += (PER_SEC - val) * 0.08 + PER_SEC * 0.001;
+    noise += 0.4;
+    const jitter = Math.sin(noise * 7.3) * PER_SEC * 0.004 + Math.sin(noise * 13.7) * PER_SEC * 0.002;
+    const { int, dec } = fmt(Math.max(0, val + jitter));
+    document.getElementById('tickerInt').textContent = int;
+    document.getElementById('tickerDec').textContent = dec;
+    setTimeout(tick, 50);
+  }
+  tick();
+
+  // ── SCREENSHOT LIGHTBOX ───────────────────────────────────────────────────────
+  document.querySelectorAll('.phone img').forEach(img => {
+    const phone = img.closest('.phone');
+    // Click to open lightbox
+    phone.addEventListener('click', () => {
+      document.getElementById('lightboxImg').src = img.src;
+      document.getElementById('lightboxImg').alt = img.alt;
+      document.getElementById('lightbox').classList.add('open');
+    });
+  });
+
+  // Close lightbox
+  function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('open');
+  }
+  document.getElementById('lightboxClose').addEventListener('click', closeLightbox);
+  document.getElementById('lightbox').addEventListener('click', e => {
+    if (e.target === e.currentTarget) closeLightbox();
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeLightbox();
+  });
+  </script>
+
+</body>
+</html>

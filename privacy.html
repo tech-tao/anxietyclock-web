@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Privacy Policy — Anxiety Clock</title>
+  <link rel="icon" href="favicon.png" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg0: #060606; --bg1: #0e0e0e; --border: #1a1a1a;
+      --red: #ff3333; --red-dim: #cc2222;
+      --text: #f0f0f0; --text-sec: #aaaaaa; --text-ter: #555555;
+      --mono: 'Courier New', Courier, monospace;
+    }
+    body { background: var(--bg0); color: var(--text); font-family: var(--mono); line-height: 1.7; }
+    a { color: var(--red); }
+    nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 18px 40px; border-bottom: 1px solid var(--border);
+      flex-wrap: wrap; gap: 12px;
+    }
+    .nav-logo { font-size: 15px; letter-spacing: 3px; color: var(--text); font-weight: 300; }
+    .nav-logo span { color: var(--red); }
+    .nav-right { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+    .nav-back { font-size: 11px; color: var(--text-ter); letter-spacing: 1px; }
+    .nav-back:hover { color: var(--text-sec); text-decoration: none; }
+    .lang-switcher { display: flex; gap: 6px; flex-wrap: wrap; }
+    .lang-btn {
+      font-family: var(--mono); font-size: 10px; letter-spacing: 1px;
+      padding: 4px 10px; border-radius: 4px; cursor: pointer;
+      border: 1px solid var(--border); background: transparent; color: var(--text-ter); transition: all 0.15s;
+    }
+    .lang-btn:hover { border-color: #333; color: var(--text-sec); }
+    .lang-btn.active { border-color: var(--red-dim); color: var(--red); background: #1a0000; }
+    .container { max-width: 720px; margin: 60px auto; padding: 0 24px 80px; }
+    .page-title { font-size: 26px; font-weight: 200; letter-spacing: 3px; color: var(--text); margin-bottom: 8px; }
+    .updated { font-size: 11px; color: var(--text-ter); letter-spacing: 2px; margin-bottom: 48px; }
+    h2 {
+      font-size: 12px; letter-spacing: 3px; color: var(--red-dim);
+      text-transform: uppercase; margin: 40px 0 14px;
+      padding-bottom: 8px; border-bottom: 1px solid #1a0000;
+    }
+    p, li { font-size: 13px; color: var(--text-sec); margin-bottom: 12px; }
+    ul { padding-left: 20px; margin-bottom: 12px; }
+    li { margin-bottom: 6px; }
+    .highlight {
+      background: #0e0000; border: 1px solid #2a0000;
+      border-radius: 8px; padding: 16px 20px; margin: 20px 0;
+    }
+    .highlight p { margin: 0; color: var(--text); }
+    footer {
+      border-top: 1px solid var(--border); padding: 24px 40px;
+      font-size: 11px; color: var(--text-ter); text-align: center;
+    }
+    @media (max-width: 600px) { nav { padding: 14px 20px; } footer { padding: 20px; } }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="nav-logo">ANXIETY <span>CLOCK</span></div>
+    <div class="nav-right">
+      <a href="index.html" class="nav-back" data-i18n="back">← Back</a>
+      <div class="lang-switcher" id="langSwitcher"></div>
+    </div>
+  </nav>
+
+  <div class="container">
+    <h1 class="page-title" data-i18n="title">PRIVACY POLICY</h1>
+    <div class="updated" data-i18n="updated">Last updated: April 2025</div>
+
+    <div class="highlight">
+      <p data-i18n="summary">Anxiety Clock does not collect, store, or transmit any personal data to our servers. All your expense data is stored locally on your device only.</p>
+    </div>
+
+    <h2 data-i18n="s1_title">1. Information We Collect</h2>
+    <p data-i18n="s1_body">Anxiety Clock itself does not collect any personal information. All expense data you enter is stored exclusively on your device using local storage and is never transmitted to any server.</p>
+
+    <h2 data-i18n="s2_title">2. Third-Party Services</h2>
+    <p data-i18n="s2_body">The app integrates the following third-party services, each with their own privacy practices:</p>
+
+    <h2 data-i18n="s2a_title">2a. Google AdMob (Advertising)</h2>
+    <p data-i18n="s2a_body">We use Google AdMob to display advertisements to free users. AdMob may collect:</p>
+    <ul>
+      <li data-i18n="s2a_li1">Device advertising ID</li>
+      <li data-i18n="s2a_li2">IP address and approximate location</li>
+      <li data-i18n="s2a_li3">Device information (model, OS version)</li>
+      <li data-i18n="s2a_li4">Ad interaction data (views, clicks)</li>
+    </ul>
+    <p data-i18n="s2a_optout">You can opt out of personalized ads via your device settings:
+      <br/>• iOS: Settings → Privacy & Security → Tracking
+      <br/>• Android: Settings → Google → Ads → Opt out of Ads Personalization</p>
+    <p data-i18n="s2a_link">For more information, see <a href="https://policies.google.com/privacy" target="_blank">Google's Privacy Policy</a>.</p>
+    <p data-i18n="s2a_premium">Premium users who have purchased "Remove Ads" are not served any advertisements.</p>
+
+    <h2 data-i18n="s2b_title">2b. RevenueCat (In-App Purchases)</h2>
+    <p data-i18n="s2b_body">We use RevenueCat to process in-app purchases. RevenueCat may collect:</p>
+    <ul>
+      <li data-i18n="s2b_li1">Anonymous user identifier</li>
+      <li data-i18n="s2b_li2">Purchase transaction data (from App Store / Google Play)</li>
+      <li data-i18n="s2b_li3">Device platform and app version</li>
+    </ul>
+    <p data-i18n="s2b_link">For more information, see <a href="https://www.revenuecat.com/privacy" target="_blank">RevenueCat's Privacy Policy</a>.</p>
+
+    <h2 data-i18n="s3_title">3. Data Storage</h2>
+    <p data-i18n="s3_body">All expense data is stored locally on your device using AsyncStorage. This data never leaves your device, is not backed up to any cloud service by us, and is deleted when you uninstall the app.</p>
+
+    <h2 data-i18n="s4_title">4. Children's Privacy</h2>
+    <p data-i18n="s4_body">Anxiety Clock is not directed at children under the age of 13. We do not knowingly collect any information from children.</p>
+
+    <h2 data-i18n="s5_title">5. Changes to This Policy</h2>
+    <p data-i18n="s5_body">We may update this Privacy Policy from time to time. Any changes will be reflected on this page with an updated date.</p>
+
+    <h2 data-i18n="s6_title">6. Contact Us</h2>
+    <p data-i18n="s6_body">If you have any questions about this Privacy Policy, please contact us at: <a href="mailto:support@tech-tao.com">support@tech-tao.com</a></p>
+  </div>
+
+  <footer data-i18n="footer">© 2025 Tech-Tao. All rights reserved.</footer>
+
+  <script>
+  const PRIVACY = {
+    en: { label: 'EN', t: {
+      back: '← Back', title: 'PRIVACY POLICY', updated: 'Last updated: April 2025',
+      summary: 'Anxiety Clock does not collect, store, or transmit any personal data to our servers. All your expense data is stored locally on your device only.',
+      s1_title: '1. Information We Collect',
+      s1_body: 'Anxiety Clock itself does not collect any personal information. All expense data you enter is stored exclusively on your device and is never transmitted to any server.',
+      s2_title: '2. Third-Party Services', s2_body: 'The app integrates the following third-party services:',
+      s2a_title: '2a. Google AdMob (Advertising)',
+      s2a_body: 'We use Google AdMob to display advertisements to free users. AdMob may collect:',
+      s2a_li1: 'Device advertising ID', s2a_li2: 'IP address and approximate location',
+      s2a_li3: 'Device information (model, OS version)', s2a_li4: 'Ad interaction data (views, clicks)',
+      s2a_optout: 'You can opt out of personalized ads via your device settings:<br/>• iOS: Settings → Privacy & Security → Tracking<br/>• Android: Settings → Google → Ads → Opt out of Ads Personalization',
+      s2a_link: 'For more information, see <a href="https://policies.google.com/privacy" target="_blank">Google\'s Privacy Policy</a>.',
+      s2a_premium: 'Premium users who have purchased "Remove Ads" are not served any advertisements.',
+      s2b_title: '2b. RevenueCat (In-App Purchases)',
+      s2b_body: 'We use RevenueCat to process in-app purchases. RevenueCat may collect:',
+      s2b_li1: 'Anonymous user identifier', s2b_li2: 'Purchase transaction data (from App Store / Google Play)',
+      s2b_li3: 'Device platform and app version',
+      s2b_link: 'For more information, see <a href="https://www.revenuecat.com/privacy" target="_blank">RevenueCat\'s Privacy Policy</a>.',
+      s3_title: '3. Data Storage',
+      s3_body: 'All expense data is stored locally on your device using AsyncStorage. This data never leaves your device, is not backed up to any cloud service by us, and is deleted when you uninstall the app.',
+      s4_title: '4. Children\'s Privacy', s4_body: 'Anxiety Clock is not directed at children under the age of 13. We do not knowingly collect any information from children.',
+      s5_title: '5. Changes to This Policy', s5_body: 'We may update this Privacy Policy from time to time. Any changes will be reflected on this page with an updated date.',
+      s6_title: '6. Contact Us', s6_body: 'If you have any questions, please contact us at: <a href="mailto:support@tech-tao.com">support@tech-tao.com</a>',
+      footer: '© 2025 Tech-Tao. All rights reserved.',
+    }},
+    zh: { label: '中文', t: {
+      back: '← 返回', title: '隐私政策', updated: '最后更新：2025年4月',
+      summary: '焦虑时钟不会向我们的服务器收集、存储或传输任何个人数据。您的所有支出数据仅保存在您的设备本地。',
+      s1_title: '1. 我们收集的信息',
+      s1_body: '焦虑时钟本身不收集任何个人信息。您输入的所有支出数据仅存储在您的设备本地，不会传输到任何服务器。',
+      s2_title: '2. 第三方服务', s2_body: '本应用集成了以下第三方服务：',
+      s2a_title: '2a. Google AdMob（广告）',
+      s2a_body: '我们使用 Google AdMob 向免费用户展示广告。AdMob 可能收集：',
+      s2a_li1: '设备广告标识符', s2a_li2: 'IP 地址和大致位置',
+      s2a_li3: '设备信息（型号、系统版本）', s2a_li4: '广告互动数据（展示、点击）',
+      s2a_optout: '您可以通过设备设置退出个性化广告：<br/>• iOS：设置 → 隐私与安全 → 跟踪<br/>• Android：设置 → Google → 广告 → 停用广告个性化',
+      s2a_link: '更多信息请参阅 <a href="https://policies.google.com/privacy" target="_blank">Google 隐私政策</a>。',
+      s2a_premium: '已购买「去除广告」的高级版用户将不会看到任何广告。',
+      s2b_title: '2b. RevenueCat（应用内购买）',
+      s2b_body: '我们使用 RevenueCat 处理应用内购买。RevenueCat 可能收集：',
+      s2b_li1: '匿名用户标识符', s2b_li2: '购买交易数据（来自 App Store / Google Play）',
+      s2b_li3: '设备平台和应用版本',
+      s2b_link: '更多信息请参阅 <a href="https://www.revenuecat.com/privacy" target="_blank">RevenueCat 隐私政策</a>。',
+      s3_title: '3. 数据存储',
+      s3_body: '所有支出数据使用 AsyncStorage 存储在您的设备本地。这些数据不会离开您的设备，我们不会将其备份到任何云服务，卸载应用后数据将被删除。',
+      s4_title: '4. 儿童隐私', s4_body: '焦虑时钟不针对13岁以下儿童。我们不会故意收集儿童的任何信息。',
+      s5_title: '5. 政策变更', s5_body: '我们可能会不时更新本隐私政策。任何变更都将在本页面上反映并注明更新日期。',
+      s6_title: '6. 联系我们', s6_body: '如有任何问题，请通过以下方式联系我们：<a href="mailto:support@tech-tao.com">support@tech-tao.com</a>',
+      footer: '© 2025 Tech-Tao 保留所有权利。',
+    }},
+    fr: { label: 'FR', t: {
+      back: '← Retour', title: 'POLITIQUE DE CONFIDENTIALITÉ', updated: 'Dernière mise à jour : avril 2025',
+      summary: 'Horloge d\'Anxiété ne collecte, ne stocke ni ne transmet aucune donnée personnelle à nos serveurs. Toutes vos données sont stockées localement sur votre appareil.',
+      s1_title: '1. Informations collectées', s1_body: 'L\'application ne collecte aucune information personnelle. Toutes les données sont stockées sur votre appareil et ne sont jamais transmises.',
+      s2_title: '2. Services tiers', s2_body: 'L\'application intègre les services tiers suivants :',
+      s2a_title: '2a. Google AdMob (Publicité)', s2a_body: 'Nous utilisons Google AdMob pour afficher des publicités. AdMob peut collecter :',
+      s2a_li1: 'Identifiant publicitaire', s2a_li2: 'Adresse IP et localisation approximative',
+      s2a_li3: 'Informations sur l\'appareil', s2a_li4: 'Données d\'interaction publicitaire',
+      s2a_optout: 'Vous pouvez désactiver les publicités personnalisées via les paramètres de votre appareil.',
+      s2a_link: 'Pour plus d\'informations : <a href="https://policies.google.com/privacy" target="_blank">Politique de confidentialité Google</a>.',
+      s2a_premium: 'Les utilisateurs Premium ne voient aucune publicité.',
+      s2b_title: '2b. RevenueCat (Achats in-app)', s2b_body: 'Nous utilisons RevenueCat pour les achats. RevenueCat peut collecter :',
+      s2b_li1: 'Identifiant utilisateur anonyme', s2b_li2: 'Données de transaction',
+      s2b_li3: 'Plateforme et version de l\'application',
+      s2b_link: 'Pour plus d\'informations : <a href="https://www.revenuecat.com/privacy" target="_blank">Politique de RevenueCat</a>.',
+      s3_title: '3. Stockage des données', s3_body: 'Toutes les données sont stockées localement sur votre appareil et supprimées lors de la désinstallation.',
+      s4_title: '4. Confidentialité des enfants', s4_body: 'L\'application n\'est pas destinée aux enfants de moins de 13 ans.',
+      s5_title: '5. Modifications', s5_body: 'Nous pouvons mettre à jour cette politique. Les modifications seront indiquées sur cette page.',
+      s6_title: '6. Contact', s6_body: 'Pour toute question : <a href="mailto:support@tech-tao.com">support@tech-tao.com</a>',
+      footer: '© 2025 Tech-Tao. Tous droits réservés.',
+    }},
+    ja: { label: '日本語', t: {
+      back: '← 戻る', title: 'プライバシーポリシー', updated: '最終更新：2025年4月',
+      summary: '不安時計はいかなる個人データもサーバーに収集・保存・送信しません。すべての支出データはお客様のデバイスにのみ保存されます。',
+      s1_title: '1. 収集する情報', s1_body: '不安時計自体は個人情報を収集しません。入力した支出データはすべてデバイス内にのみ保存され、外部に送信されることはありません。',
+      s2_title: '2. サードパーティサービス', s2_body: '本アプリは以下のサードパーティサービスを利用しています：',
+      s2a_title: '2a. Google AdMob（広告）', s2a_body: 'AdMobが収集する可能性のある情報：',
+      s2a_li1: '広告識別子', s2a_li2: 'IPアドレスおよび概算位置情報',
+      s2a_li3: 'デバイス情報', s2a_li4: '広告インタラクションデータ',
+      s2a_optout: 'デバイス設定からパーソナライズ広告をオプトアウトできます。',
+      s2a_link: '詳細は <a href="https://policies.google.com/privacy" target="_blank">Googleプライバシーポリシー</a> をご覧ください。',
+      s2a_premium: 'プレミアム購入済みのユーザーには広告は表示されません。',
+      s2b_title: '2b. RevenueCat（アプリ内購入）', s2b_body: 'RevenueCatが収集する可能性のある情報：',
+      s2b_li1: '匿名ユーザー識別子', s2b_li2: '購入トランザクションデータ', s2b_li3: 'デバイスプラットフォームおよびアプリバージョン',
+      s2b_link: '詳細は <a href="https://www.revenuecat.com/privacy" target="_blank">RevenueCatプライバシーポリシー</a> をご覧ください。',
+      s3_title: '3. データの保存', s3_body: 'すべての支出データはデバイス内にのみ保存されます。アンインストール時に削除されます。',
+      s4_title: '4. 子どものプライバシー', s4_body: '本アプリは13歳未満の子どもを対象としていません。',
+      s5_title: '5. ポリシーの変更', s5_body: 'このポリシーは随時更新される場合があります。',
+      s6_title: '6. お問い合わせ', s6_body: 'ご質問は <a href="mailto:support@tech-tao.com">support@tech-tao.com</a> までお問い合わせください。',
+      footer: '© 2025 Tech-Tao. All rights reserved.',
+    }},
+    ko: { label: '한국어', t: {
+      back: '← 뒤로', title: '개인정보 처리방침', updated: '최종 업데이트: 2025년 4월',
+      summary: '불안 시계는 어떠한 개인 데이터도 서버에 수집, 저장 또는 전송하지 않습니다. 모든 지출 데이터는 기기에만 저장됩니다.',
+      s1_title: '1. 수집하는 정보', s1_body: '불안 시계 자체는 개인정보를 수집하지 않습니다. 입력한 모든 지출 데이터는 기기에만 저장되며 외부로 전송되지 않습니다.',
+      s2_title: '2. 제3자 서비스', s2_body: '앱은 다음 제3자 서비스를 통합합니다:',
+      s2a_title: '2a. Google AdMob (광고)', s2a_body: 'AdMob이 수집할 수 있는 정보:',
+      s2a_li1: '기기 광고 ID', s2a_li2: 'IP 주소 및 대략적인 위치',
+      s2a_li3: '기기 정보', s2a_li4: '광고 상호작용 데이터',
+      s2a_optout: '기기 설정에서 맞춤형 광고를 거부할 수 있습니다.',
+      s2a_link: '자세한 내용은 <a href="https://policies.google.com/privacy" target="_blank">Google 개인정보처리방침</a>을 참조하세요.',
+      s2a_premium: '광고 제거를 구매한 프리미엄 사용자에게는 광고가 표시되지 않습니다.',
+      s2b_title: '2b. RevenueCat (인앱 구매)', s2b_body: 'RevenueCat이 수집할 수 있는 정보:',
+      s2b_li1: '익명 사용자 식별자', s2b_li2: '구매 거래 데이터', s2b_li3: '기기 플랫폼 및 앱 버전',
+      s2b_link: '자세한 내용은 <a href="https://www.revenuecat.com/privacy" target="_blank">RevenueCat 개인정보처리방침</a>을 참조하세요.',
+      s3_title: '3. 데이터 저장', s3_body: '모든 지출 데이터는 기기에만 저장되며 앱 삭제 시 제거됩니다.',
+      s4_title: '4. 아동 개인정보', s4_body: '본 앱은 13세 미만 아동을 대상으로 하지 않습니다.',
+      s5_title: '5. 방침 변경', s5_body: '이 방침은 수시로 업데이트될 수 있습니다.',
+      s6_title: '6. 문의', s6_body: '문의사항은 <a href="mailto:support@tech-tao.com">support@tech-tao.com</a>으로 연락주세요.',
+      footer: '© 2025 Tech-Tao. All rights reserved.',
+    }},
+    de: { label: 'DE', t: {
+      back: '← Zurück', title: 'DATENSCHUTZERKLÄRUNG', updated: 'Zuletzt aktualisiert: April 2025',
+      summary: 'Angst-Uhr sammelt, speichert oder überträgt keine persönlichen Daten an unsere Server. Alle Ausgabendaten werden nur lokal auf Ihrem Gerät gespeichert.',
+      s1_title: '1. Erhobene Daten', s1_body: 'Angst-Uhr selbst erhebt keine persönlichen Daten. Alle eingegebenen Daten verbleiben auf Ihrem Gerät.',
+      s2_title: '2. Drittanbieter', s2_body: 'Die App integriert folgende Drittanbieter:',
+      s2a_title: '2a. Google AdMob (Werbung)', s2a_body: 'AdMob kann folgendes erheben:',
+      s2a_li1: 'Geräte-Werbe-ID', s2a_li2: 'IP-Adresse und ungefährer Standort',
+      s2a_li3: 'Geräteinformationen', s2a_li4: 'Werbe-Interaktionsdaten',
+      s2a_optout: 'Sie können personalisierte Werbung in den Geräteeinstellungen deaktivieren.',
+      s2a_link: 'Weitere Informationen: <a href="https://policies.google.com/privacy" target="_blank">Google Datenschutzerklärung</a>.',
+      s2a_premium: 'Premium-Nutzer sehen keine Werbung.',
+      s2b_title: '2b. RevenueCat (In-App-Käufe)', s2b_body: 'RevenueCat kann folgendes erheben:',
+      s2b_li1: 'Anonyme Benutzerkennung', s2b_li2: 'Kauftransaktionsdaten', s2b_li3: 'Geräteplattform und App-Version',
+      s2b_link: 'Weitere Informationen: <a href="https://www.revenuecat.com/privacy" target="_blank">RevenueCat Datenschutzerklärung</a>.',
+      s3_title: '3. Datenspeicherung', s3_body: 'Alle Daten werden lokal auf Ihrem Gerät gespeichert und beim Deinstallieren gelöscht.',
+      s4_title: '4. Datenschutz für Kinder', s4_body: 'Die App richtet sich nicht an Kinder unter 13 Jahren.',
+      s5_title: '5. Änderungen', s5_body: 'Wir können diese Datenschutzerklärung von Zeit zu Zeit aktualisieren.',
+      s6_title: '6. Kontakt', s6_body: 'Bei Fragen kontaktieren Sie uns: <a href="mailto:support@tech-tao.com">support@tech-tao.com</a>',
+      footer: '© 2025 Tech-Tao. Alle Rechte vorbehalten.',
+    }},
+    es: { label: 'ES', t: {
+      back: '← Volver', title: 'POLÍTICA DE PRIVACIDAD', updated: 'Última actualización: abril 2025',
+      summary: 'Reloj de Ansiedad no recopila, almacena ni transmite datos personales a nuestros servidores. Todos tus datos se almacenan localmente en tu dispositivo.',
+      s1_title: '1. Información recopilada', s1_body: 'La app no recopila información personal. Todos los datos se almacenan en tu dispositivo y nunca se transmiten.',
+      s2_title: '2. Servicios de terceros', s2_body: 'La app integra los siguientes servicios de terceros:',
+      s2a_title: '2a. Google AdMob (Publicidad)', s2a_body: 'AdMob puede recopilar:',
+      s2a_li1: 'ID de publicidad del dispositivo', s2a_li2: 'Dirección IP y ubicación aproximada',
+      s2a_li3: 'Información del dispositivo', s2a_li4: 'Datos de interacción con anuncios',
+      s2a_optout: 'Puedes desactivar los anuncios personalizados en la configuración de tu dispositivo.',
+      s2a_link: 'Más información: <a href="https://policies.google.com/privacy" target="_blank">Política de privacidad de Google</a>.',
+      s2a_premium: 'Los usuarios Premium no ven anuncios.',
+      s2b_title: '2b. RevenueCat (Compras in-app)', s2b_body: 'RevenueCat puede recopilar:',
+      s2b_li1: 'Identificador de usuario anónimo', s2b_li2: 'Datos de transacciones de compra', s2b_li3: 'Plataforma del dispositivo y versión de la app',
+      s2b_link: 'Más información: <a href="https://www.revenuecat.com/privacy" target="_blank">Política de privacidad de RevenueCat</a>.',
+      s3_title: '3. Almacenamiento de datos', s3_body: 'Todos los datos se almacenan localmente en tu dispositivo y se eliminan al desinstalar la app.',
+      s4_title: '4. Privacidad infantil', s4_body: 'La app no está dirigida a menores de 13 años.',
+      s5_title: '5. Cambios en esta política', s5_body: 'Podemos actualizar esta política periódicamente.',
+      s6_title: '6. Contacto', s6_body: 'Para cualquier pregunta: <a href="mailto:support@tech-tao.com">support@tech-tao.com</a>',
+      footer: '© 2025 Tech-Tao. Todos los derechos reservados.',
+    }},
+  };
+
+  let currentLang = localStorage.getItem('lang') || 'en';
+
+  function applyLang(code) {
+    currentLang = code;
+    localStorage.setItem('lang', code);
+    const t = PRIVACY[code].t;
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.getAttribute('data-i18n');
+      if (t[key] !== undefined) el.innerHTML = t[key];
+    });
+    document.documentElement.lang = code;
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.lang === code);
+    });
+  }
+
+  const switcher = document.getElementById('langSwitcher');
+  Object.entries(PRIVACY).forEach(([code, { label }]) => {
+    const btn = document.createElement('button');
+    btn.className = 'lang-btn';
+    btn.dataset.lang = code;
+    btn.textContent = label;
+    btn.onclick = () => applyLang(code);
+    switcher.appendChild(btn);
+  });
+
+  applyLang(currentLang);
+  </script>
+
+</body>
+</html>
